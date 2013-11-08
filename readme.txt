@@ -1,6 +1,6 @@
 === MyMail Mandrill Integration ===
 Contributors: revaxarts
-Tags: madnrill, mymail, newsletter, email, revaxarts 
+Tags: mandrill, mymail, newsletter, email, revaxarts 
 Requires at least: 3.3
 Tested up to: 3.7.1
 Stable tag: 0.2.1
@@ -21,7 +21,7 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 == Changelog ==
 
 = 0.2.1 =
-* small type
+* small typo
 
 = 0.2 =
 * fixed some stuff and bugs
