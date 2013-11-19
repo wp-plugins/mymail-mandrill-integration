@@ -1,6 +1,6 @@
 === MyMail Mandrill Integration ===
 Contributors: revaxarts
-Tags: mandrill, mymail, newsletter, email, revaxarts 
+Tags: mandrill, mymail, delivery, deliverymethod, newsletter, email, revaxarts 
 Requires at least: 3.3
 Tested up to: 3.7.1
 Stable tag: 0.2.1
