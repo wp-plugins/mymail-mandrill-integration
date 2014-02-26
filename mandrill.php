@@ -690,7 +690,7 @@ function mymail_mandrill_notice() {
 ?>
 <div id="message" class="error">
 	<p>
-	<strong>Mandrill integration for MyMail</strong> requires the <a href="http://rxa.li/mymail">MyMail Newsletter Plugin</a>, at least version <strong><?php echo MYMAIL_MANDRILL_REQUIRED_VERSION?></strong>. Plugin deactivated.
+	<strong>Mandrill integration for MyMail</strong> requires the <a href="http://rxa.li/mymail?utm_source=Mandrill+integration+for+MyMail">MyMail Newsletter Plugin</a>, at least version <strong><?php echo MYMAIL_MANDRILL_REQUIRED_VERSION?></strong>. Plugin deactivated.
 	</p>
 </div>
 <?php
