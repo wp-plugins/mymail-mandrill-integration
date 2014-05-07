@@ -4,14 +4,14 @@ Plugin Name: MyMail Mandrill Integration
 Plugin URI: http://rxa.li/mymail
 Description: Uses Mandrill to deliver emails for the MyMail Newsletter Plugin for WordPress.
 This requires at least version 1.6.3 of the plugin
-Version: 0.2.1
+Version: 0.2.2
 Author: revaxarts.com
 Author URI: http://revaxarts.com
 License: GPLv2 or later
 */
 
 
-define('MYMAIL_MANDRILL_VERSION', '0.2.1');
+define('MYMAIL_MANDRILL_VERSION', '0.2.2');
 define('MYMAIL_MANDRILL_REQUIRED_VERSION', '1.6.3');
 define('MYMAIL_MANDRILL_ID', 'mandrill');
 define('MYMAIL_MANDRILL_DOMAIN', 'mymail-mandrill');
@@ -20,7 +20,7 @@ define('MYMAIL_MANDRILL_URI', plugins_url().'/mymail-mandrill-integration');
 define('MYMAIL_MANDRILL_SLUG', 'mymail-mandrill-integration/mandrill.php');
 
 
-add_action('init', 'mymail_mandrill_init');
+add_action('init', 'mymail_mandrill_init', 1);
 register_activation_hook(MYMAIL_MANDRILL_SLUG, 'mymail_mandrill_activation');
 register_deactivation_hook(MYMAIL_MANDRILL_SLUG, 'mymail_mandrill_deactivation');
 
