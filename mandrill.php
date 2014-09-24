@@ -461,7 +461,7 @@ function mymail_mandrill_deliverytab() {
 		<tr valign="top">
 			<th scope="row">&nbsp;</th> 
 			<td>
-				<img src="<?php echo MYMAIL_URI.'/assets/img/icons/'.($verified ? 'green' : 'red').'_2x.png'?>" width="16" height="16">
+				<img src="<?php echo MYMAIL_URI . 'assets/img/icons/'.($verified ? 'green' : 'red').'_2x.png'?>" width="16" height="16">
 				<?php echo ($verified) ? __('Your credentials are ok!', MYMAIL_MANDRILL_DOMAIN) : __('Your credentials are WRONG!', MYMAIL_MANDRILL_DOMAIN)?>
 				<input type="hidden" name="mymail_options[<?php echo MYMAIL_MANDRILL_ID ?>_verified]" value="<?php echo $verified?>">
 			</td>
