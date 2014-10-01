@@ -8,6 +8,8 @@ License: GPLv2 or later
 
 == Description ==
 
+> This Plugin requires [MyMail Newsletter Plugin for WordPress](http://rxa.li/mymail?utm_source=Mandrill+integration+for+MyMail)
+
 Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plugin for WordPress](http://rxa.li/mymail).
 
 == Installation ==
