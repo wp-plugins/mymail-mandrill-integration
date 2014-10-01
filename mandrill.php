@@ -89,7 +89,8 @@ function mymail_mandrill_initsend($mailobject) {
 		$mailobject->mailer->SMTPAuth = true;
 		$mailobject->mailer->Username = mymail_option(MYMAIL_MANDRILL_ID.'_username');
 		$mailobject->mailer->Password = mymail_option(MYMAIL_MANDRILL_ID.'_apikey');
-		
+		$mailobject->mailer->SMTPKeepAlive = true;
+	
 	} else {
 	
 		//disable dkim
