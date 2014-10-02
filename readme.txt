@@ -23,7 +23,7 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 == Changelog ==
 
 = 0.2.3 =
-* sending via SMTP is no faster
+* sending via SMTP is now faster
 
 = 0.2.2 =
 * fixed a bug where mails are not send at an early stage of the page load
