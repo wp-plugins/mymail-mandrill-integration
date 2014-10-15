@@ -3,7 +3,7 @@ Contributors: revaxarts
 Tags: mandrill, mymail, delivery, deliverymethod, newsletter, email, revaxarts, mymailesp
 Requires at least: 3.3
 Tested up to: 4.0
-Stable tag: 0.2.3
+Stable tag: 0.3
 License: GPLv2 or later
 
 == Description ==
@@ -21,6 +21,10 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 5. Send a testmail
 
 == Changelog ==
+
+= 0.3 =
+* update for MyMail 2
+* moved functions into class
 
 = 0.2.3 =
 * sending via SMTP is now faster
@@ -41,5 +45,5 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 
 == Additional Info One ==
 
-This Plugin requires [MyMail Newsletter Plugin for WordPress](http://rxa.li/mymail)
+This Plugin requires [MyMail Newsletter Plugin for WordPress](http://rxa.li/mymail?utm_source=Mandrill+integration+for+MyMail)
 
