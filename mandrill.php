@@ -185,7 +185,7 @@ class MyMailMandrill {
 				'ip_pool' => null,
 				'return_path_domain' => null,
 			), true, $timeout);
-			
+
 			if(is_wp_error($response)){
 			
 				$mailobject->set_error($response->get_error_message());
@@ -285,7 +285,7 @@ class MyMailMandrill {
 						foreach($campaigns as $campaign){
 
 							//only campaign which have been started maximum 120 minutes before the event has been created
-							if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*120 < 0) break;
+							if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*12000 < 0) break;
 
 							if(mymail('subscribers')->bounce($subscriber->ID, $campaign->campaign_id, $subscriberdata->reason == 'hard-bounce')){
 								$response = $this->do_call('rejects/delete', array(
