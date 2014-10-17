@@ -3,7 +3,7 @@ Contributors: revaxarts
 Tags: mandrill, mymail, delivery, deliverymethod, newsletter, email, revaxarts, mymailesp
 Requires at least: 3.3
 Tested up to: 4.0
-Stable tag: 0.3
+Stable tag: 0.3.1
 License: GPLv2 or later
 
 == Description ==
@@ -21,6 +21,9 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 5. Send a testmail
 
 == Changelog ==
+
+= 0.3.1 =
+* foxed: unexpected output on activation 
 
 = 0.3 =
 * update for MyMail 2

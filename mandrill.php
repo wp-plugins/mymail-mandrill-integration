@@ -4,14 +4,14 @@ Plugin Name: MyMail Mandrill Integration
 Plugin URI: http://rxa.li/mymail
 Description: Uses Mandrill to deliver emails for the MyMail Newsletter Plugin for WordPress.
 This requires at least version 2.0 of the plugin
-Version: 0.3
+Version: 0.3.1
 Author: revaxarts.com
 Author URI: http://revaxarts.com
 License: GPLv2 or later
 */
 
 
-define('MYMAIL_MANDRILL_VERSION', '0.3');
+define('MYMAIL_MANDRILL_VERSION', '0.3.1');
 define('MYMAIL_MANDRILL_REQUIRED_VERSION', '2.0');
 define('MYMAIL_MANDRILL_ID', 'mandrill');
 define('MYMAIL_MANDRILL_DOMAIN', 'mymail-mandrill');
@@ -282,10 +282,10 @@ class MyMailMandrill {
 						$reseted = false;
 						$campaigns = mymail('subscribers')->get_sent_campaigns($subscriber->ID);
 
-						foreach($campaigns as $campaign){
+						foreach($campaigns as $i => $campaign){
 
-							//only campaign which have been started maximum 120 minutes before the event has been created
-							if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*12000 < 0) break;
+							//only campaign which have been started maximum a day ago or the last 10 campaigns
+							if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*1440 < 0 || $i >= 10) break;
 
 							if(mymail('subscribers')->bounce($subscriber->ID, $campaign->campaign_id, $subscriberdata->reason == 'hard-bounce')){
 								$response = $this->do_call('rejects/delete', array(
@@ -718,11 +718,11 @@ class MyMailMandrill {
 	/**
 	 * activation function.
 	 * 
-	 * activation function
+	 * activate function
 	 * @access public
 	 * @return void
 	 */
-	public function activation() {
+	public function activate() {
 
 		if (defined('MYMAIL_VERSION') && version_compare(MYMAIL_MANDRILL_REQUIRED_VERSION, MYMAIL_VERSION, '<=')) {
 			mymail_notice(sprintf(__('Change the delivery method on the %s!', MYMAIL_MANDRILL_DOMAIN), '<a href="options-general.php?page=newsletter-settings&mymail_remove_notice=mymail_delivery_method#delivery">Settings Page</a>'), '', false, 'delivery_method');
@@ -737,11 +737,11 @@ class MyMailMandrill {
 	/**
 	 * deactivation function.
 	 * 
-	 * deactivation function
+	 * deactivate function
 	 * @access public
 	 * @return void
 	 */
-	public function deactivation() {
+	public function deactivate() {
 
 		if (defined('MYMAIL_VERSION') && version_compare(MYMAIL_MANDRILL_REQUIRED_VERSION, MYMAIL_VERSION, '<=')) {
 			if(mymail_option('deliverymethod') == MYMAIL_MANDRILL_ID){
