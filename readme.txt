@@ -23,7 +23,7 @@ Uses Mandrill App by Mailchimp to deliver emails for the [MyMail Newsletter Plug
 == Changelog ==
 
 = 0.3.1 =
-* foxed: unexpected output on activation 
+* fixed: unexpected output on activation 
 
 = 0.3 =
 * update for MyMail 2
