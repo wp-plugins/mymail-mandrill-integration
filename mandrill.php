@@ -4,14 +4,14 @@ Plugin Name: MyMail Mandrill Integration
 Plugin URI: http://rxa.li/mymail
 Description: Uses Mandrill to deliver emails for the MyMail Newsletter Plugin for WordPress.
 This requires at least version 2.0 of the plugin
-Version: 0.3.1
+Version: 0.3.2
 Author: revaxarts.com
 Author URI: http://revaxarts.com
 License: GPLv2 or later
 */
 
 
-define('MYMAIL_MANDRILL_VERSION', '0.3.1');
+define('MYMAIL_MANDRILL_VERSION', '0.3.2');
 define('MYMAIL_MANDRILL_REQUIRED_VERSION', '2.0');
 define('MYMAIL_MANDRILL_ID', 'mandrill');
 define('MYMAIL_MANDRILL_DOMAIN', 'mymail-mandrill');
@@ -335,7 +335,7 @@ class MyMailMandrill {
 	 */
 	public function do_call($path, $data = array(), $bodyonly = false, $timeout = 5) {
 		
-		$url = 'https://mandrillapp.com/api/1.0/'.$path.'.json';
+		$url = 'http://mandrillapp.com/api/1.0/'.$path.'.json';
 		if(is_bool($data)){
 			$bodyonly = $data;
 			$data = array();
@@ -344,6 +344,7 @@ class MyMailMandrill {
 		
 		$response = wp_remote_post( $url, array(
 			'timeout' => $timeout,
+			'sslverify' => false,
 			'body' => $data
 		));
 		
@@ -491,20 +492,23 @@ class MyMailMandrill {
 			</tr>
 		</table>
 		</div>
+		<?php if (mymail_option('deliverymethod') == MYMAIL_MANDRILL_ID) : ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Use subaccount' , MYMAIL_MANDRILL_DOMAIN) ?></th>
 				<td>
 				<select name="mymail_options[<?php echo MYMAIL_MANDRILL_ID ?>_subaccount]">
 					<option value=""<?php selected(mymail_option(MYMAIL_MANDRILL_ID.'_subaccount'), 0); ?>><?php _e('none', MYMAIL_MANDRILL_DOMAIN); ?></option>
-				<?php $subaccounts = $this->get_subaccounts(); 
-					foreach($subaccounts as $account){
-						echo '<option value="'.$account->id.'" '.selected(mymail_option(MYMAIL_MANDRILL_ID.'_subaccount'), $account->id, true).'>'.$account->name.($account->status != 'active' ? ' ('.$account->status.')' : '').'</option>';
-					}
+				<?php 
+						$subaccounts = $this->get_subaccounts(); 
+						foreach($subaccounts as $account){
+							echo '<option value="'.$account->id.'" '.selected(mymail_option(MYMAIL_MANDRILL_ID.'_subaccount'), $account->id, true).'>'.$account->name.($account->status != 'active' ? ' ('.$account->status.')' : '').'</option>';
+						}
 				?>
 				</select> <span class="description"><?php echo sprintf(__('Create new subaccounts on %s', MYMAIL_MANDRILL_DOMAIN), '<a href="https://mandrillapp.com/subaccounts" class="external">'.__('your Mandrill Dashboard', MYMAIL_MANDRILL_DOMAIN).'</a>'); ?></span></td>
 			</tr>
 		</table>
+		<?php endif; ?>
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row"><?php _e('Track in Mandrill' , MYMAIL_MANDRILL_DOMAIN) ?></th>
