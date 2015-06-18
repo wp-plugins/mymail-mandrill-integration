@@ -4,14 +4,14 @@ Plugin Name: MyMail Mandrill Integration
 Plugin URI: http://rxa.li/mymail
 Description: Uses Mandrill to deliver emails for the MyMail Newsletter Plugin for WordPress.
 This requires at least version 2.0 of the plugin
-Version: 0.3.2
+Version: 0.3.3
 Author: revaxarts.com
 Author URI: http://revaxarts.com
 License: GPLv2 or later
 */
 
 
-define('MYMAIL_MANDRILL_VERSION', '0.3.2');
+define('MYMAIL_MANDRILL_VERSION', '0.3.3');
 define('MYMAIL_MANDRILL_REQUIRED_VERSION', '2.0');
 define('MYMAIL_MANDRILL_ID', 'mandrill');
 define('MYMAIL_MANDRILL_DOMAIN', 'mymail-mandrill');
@@ -173,7 +173,7 @@ class MyMailMandrill {
 
 			$mailobject->mailer->PreSend();
 			$raw_message = $mailobject->mailer->GetSentMIMEMessage();
-			
+
 			$timeout = 15;
 			
 			$response = $this->do_call('messages/send-raw', array(
@@ -251,71 +251,82 @@ class MyMailMandrill {
 	 */
 	public function check_bounces() {
 
-			if ( get_transient( 'mymail_check_bounces_lock' ) ) return false;
+		if ( get_transient( 'mymail_check_bounces_lock' ) ) return false;
+		
+		//check bounces only every five minutes
+		set_transient( 'mymail_check_bounces_lock', true, mymail_option('bounce_check', 5)*60 );
+
+		$subaccount = mymail_option(MYMAIL_MANDRILL_ID.'_subaccount', NULL);
+		
+		$response = $this->do_call('rejects/list', array('subaccount' => $subaccount), true);
+
+		if(is_wp_error($response)){
+		
+			$response->get_error_message();
+			//Stop if there was an error
+			return false;
 			
-			//check bounces only every five minutes
-			set_transient( 'mymail_check_bounces_lock', true, mymail_option('bounce_check', 5)*60 );
+		}
 
-			$subaccount = mymail_option(MYMAIL_MANDRILL_ID.'_subaccount', NULL);
-			
-			$response = $this->do_call('rejects/list', array('subaccount' => $subaccount), true);
+		if(!empty($response)){
+		
+			//only the first 100
+			$count = 100;
+			foreach(array_slice($response, 0, $count) as $subscriberdata){
 
-			if(is_wp_error($response)){
-			
-				$response->get_error_message();
-				//Stop if there was an error
-				return false;
-				
-			}
-			
-			if(!empty($response)){
-			
-				//only the first 100
-				$count = 100;
-				foreach(array_slice($response, 0, $count) as $subscriberdata){
-				
-					$subscriber = mymail('subscribers')->get_by_mail($subscriberdata->email);
+				$subscriber = mymail('subscribers')->get_by_mail($subscriberdata->email);
 
-					//only if user exists
-					if($subscriber){
+				//only if user exists
+				if($subscriber){
 
-						$reseted = false;
-						$campaigns = mymail('subscribers')->get_sent_campaigns($subscriber->ID);
+					$reseted = false;
 
-						foreach($campaigns as $i => $campaign){
+					switch($subscriberdata->reason){
+						case 'spam':
+						case 'unsub':
+							mymail('subscribers')->unsubscribe($subscriber->ID);
+							break;
+						case 'soft-bounce':
+						case 'hard-bounce':
+							$campaigns = mymail('subscribers')->get_sent_campaigns($subscriber->ID);
 
-							//only campaign which have been started maximum a day ago or the last 10 campaigns
-							if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*1440 < 0 || $i >= 10) break;
+							foreach($campaigns as $i => $campaign){
 
-							if(mymail('subscribers')->bounce($subscriber->ID, $campaign->campaign_id, $subscriberdata->reason == 'hard-bounce')){
-								$response = $this->do_call('rejects/delete', array(
-									'email' => $subscriberdata->email,
-									'subaccount' => $subaccount
-								), true);
-								$reseted = isset($response->deleted) && $response->deleted;
+								//only campaign which have been started maximum a day ago or the last 10 campaigns
+								if($campaign->timestamp-strtotime($subscriberdata->created_at)+60*1440 < 0 || $i >= 10) break;
+
+								if(mymail('subscribers')->bounce($subscriber->ID, $campaign->campaign_id, $subscriberdata->reason == 'hard-bounce')){
+									$response = $this->do_call('rejects/delete', array(
+										'email' => $subscriberdata->email,
+										'subaccount' => $subaccount
+									), true);
+									$reseted = isset($response->deleted) && $response->deleted;
+								}
+
 							}
+							break;
+					}
 
-						}
 
-						if(!$reseted){
-							$response = $this->do_call('rejects/delete', array(
-								'email' => $subscriberdata->email,
-								'subaccount' => $subaccount
-							), true);
-							$reseted = isset($response->deleted) && $response->deleted;
-						}
-
-						
-					}else{
-						//remove user from the list
+					if(!$reseted){
 						$response = $this->do_call('rejects/delete', array(
 							'email' => $subscriberdata->email,
 							'subaccount' => $subaccount
-						));
-						$count++;
+						), true);
+						$reseted = isset($response->deleted) && $response->deleted;
 					}
+
+					
+				}else{
+					//remove user from the list
+					$response = $this->do_call('rejects/delete', array(
+						'email' => $subscriberdata->email,
+						'subaccount' => $subaccount
+					));
+					$count++;
 				}
 			}
+		}
 			
 	}
 
